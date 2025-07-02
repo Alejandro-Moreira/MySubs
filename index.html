@@ -1,0 +1,1474 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MySubs </title>
+    <link rel="icon" href="LogoSubs.png" type="image/png">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #5d9bff 0%, #2c5cc4 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            color: white;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-logo {
+            height: 100px;
+            border-radius: 18px;
+            margin-right: 10px;
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 500;
+        }
+
+        .profile-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .profile-icon:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-tab:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .nav-tab.active {
+            background: rgba(255, 255, 255, 0.9);
+            color: #667eea;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .content-section {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #184d66;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #66e6ea 0%, #4b9ca2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .calendar-day:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .calendar-day.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .time-slot {
+            padding: 10px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .time-slot:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .time-slot.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .time-slot.unavailable {
+            background: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
+        }
+
+        .patient-card,
+        .appointment-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .patient-card:hover,
+        .appointment-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .patient-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-confirmed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 25px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            background: white;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #66dbea 0%, #4b9ca2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            z-index: 1001;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .calendar-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .feature-result {
+            background: #f8f9ff;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #4b9ca2;
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .feature-result h4 {
+            color: #4b9ca2;
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e1e5e9;
+            padding-bottom: 10px;
+        }
+
+        .result-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #e1e5e9;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .result-item strong {
+            color: #333;
+        }
+
+        .btn-sm {
+            padding: 7px 18px;
+            font-size: 13px;
+            border-radius: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <img src="LogoSubs.png" alt="MySubs Logo" class="header-logo">
+                <div>
+                    <h1>MySubs</h1>
+                    <p>Administración y control de suscripciones</p>
+                </div>
+            </div>
+            <div class="profile-section">
+                <span>Bienvenido, Usuario</span>
+                <div class="profile-icon">👤</div>
+                <button class="btn btn-secondary btn-sm" id="logoutBtn" style="margin-left:10px;" onclick="openModal('logoutModal')">Cerrar sesión</button>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab" onclick="showSection('gestion-suscripciones', this)">🗂️ Gestión de
+                suscripciones</button>
+            <button class="nav-tab" onclick="showSection('notificaciones', this)">🔔 Notificaciones y alertas</button>
+            <button class="nav-tab" onclick="showSection('visualizacion-gastos', this)">📊 Análisis y visualización de
+                gastos</button>
+            <button class="nav-tab" onclick="showSection('gestion-pagos', this)">💳 Gestión de pagos</button>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="content-section active">
+            <div style="text-align: center; margin-bottom: 40px;">
+                <h2 style="font-size: 2.2em; color: #333;">
+                    MySubs: Organiza tus suscripciones, controla tus gastos y optimiza tu consumo digital.
+                </h2>
+                <p style="font-size: 1.1em; color: #555; max-width: 800px; margin: 15px auto 0;">
+                    Una solución integral para usuarios que buscan gestionar sus suscripciones digitales desde un solo
+                    lugar,
+                    evitar pagos innecesarios y mejorar su salud financiera.
+                </p>
+            </div>
+
+            <div class="form-grid" style="align-items: start; gap: 30px; margin-bottom: 30px;">
+                <div class="patient-card" style="border-color: #f5576c;">
+                    <h3>La Problemática</h3>
+                    <p style="margin-top: 10px;">
+                        <strong>Descontrol financiero por suscripciones:</strong> Más del 60% de los usuarios no saben
+                        cuánto
+                        gastan en servicios digitales. Se enfrentan a cargos automáticos no deseados, dificultad para
+                        cancelar
+                        suscripciones y falta de visibilidad sobre sus gastos mensuales.
+                    </p>
+                </div>
+
+                <div class="patient-card" style="border-color: #4facfe;">
+                    <h3>La Solución: MySubs</h3>
+                    <p style="margin-top: 10px;">
+                        MySubs es una plataforma web y móvil que te permite gestionar tus suscripciones digitales de
+                        forma eficiente,
+                        centralizando información y automatizando alertas. Se compone de cuatro módulos clave:
+                    </p>
+                    <ul style="list-style-position: inside; padding-left: 0; margin-top: 10px;">
+                        <li style="margin-bottom: 8px;"><strong>Gestión de suscripciones:</strong> Registra, organiza y
+                            cancela
+                            servicios como Netflix, Spotify, etc.</li>
+                        <li style="margin-bottom: 8px;"><strong>Notificaciones inteligentes:</strong> Recibe alertas
+                            sobre vencimientos y
+                            pagos automáticos.</li>
+                        <li style="margin-bottom: 8px;"><strong>Análisis de gastos:</strong> Visualiza reportes y
+                            gráficos de consumo mensual.</li>
+                        <li style="margin-bottom: 8px;"><strong>Gestión de pagos:</strong> Controla métodos de pago y el
+                            historial de cobros.</li>
+                    </ul>
+                </div>
+
+                <div class="patient-card" style="border-color: #66e6ea;">
+                    <h3>Beneficios Clave</h3>
+                    <ul style="list-style-position: inside; padding-left: 0; margin-top: 10px;">
+                        <li style="margin-bottom: 8px;">Evita cobros no deseados y reduce tus gastos en servicios
+                            digitales.</li>
+                        <li style="margin-bottom: 8px;">Obtén alertas personalizadas para una mejor planificación
+                            financiera.</li>
+                        <li style="margin-bottom: 8px;">Toma decisiones informadas sobre qué servicios conservar o
+                            cancelar.</li>
+                        <li style="margin-bottom: 8px;">Visualiza tus finanzas digitales en tiempo real, desde cualquier
+                            dispositivo.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div
+                style="text-align: center; margin-top: 40px; padding: 30px; background: rgba(102, 230, 234, 0.1); border-radius: 15px;">
+                <h3 style="font-size: 1.5em; color: #333;">¡Empieza a ahorrar y recuperar el control!</h3>
+                <button class="btn" style="margin-top: 15px; padding: 14px 35px; font-size: 17px;" onclick="openModal('registerModal')">Crea tu cuenta gratuita</button>
+                <button class="btn btn-secondary" style="margin-top: 15px; padding: 14px 35px; font-size: 17px;" onclick="openModal('loginModal')">Iniciar sesión</button>
+            </div>
+        </div>
+
+        <!-- MÓDULO: Gestión de Suscripciones -->
+        <div id="gestion-suscripciones" class="content-section">
+            <!-- Encabezado -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>🧾 Gestión de Suscripciones</h2>
+                <button class="btn" onclick="openModal('subscriptionModal')">➕ Nueva Suscripción</button>
+            </div>
+
+            <!-- Buscador -->
+            <input type="text" class="search-box" placeholder="🔍 Buscar por servicio, categoría o fecha...">
+
+            <!-- Filtros -->
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Filtrar por Categoría:</label>
+                    <select>
+                        <option>Todas las categorías</option>
+                        <option>Entretenimiento</option>
+                        <option>Educación</option>
+                        <option>Almacenamiento</option>
+                        <option>Software</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Filtrar por Estado:</label>
+                    <select>
+                        <option>Todos los estados</option>
+                        <option>Activa</option>
+                        <option>Inactiva</option>
+                        <option>Cancelada</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Listado de suscripciones -->
+            <div class="subscription-list">
+
+                <!-- Tarjeta de suscripción activa -->
+                <div class="appointment-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h4>Netflix - ID: S001</h4>
+                            <p><strong>Categoría:</strong> Entretenimiento</p>
+                            <p>📅 Renovación: 28 de Julio, 2025 - 💵 $15.99</p>
+                            <small>Método de pago: Tarjeta Visa (****1234)</small>
+                        </div>
+                        <div style="text-align: right;">
+                            <span class="status-badge status-confirmed">Activa</span><br>
+                            <button class="btn btn-secondary" onclick="openEditModal('S001')">Editar</button>
+                            <button class="btn" style="background: #dc3545;"
+                                onclick="cancelSubscription('S001')">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta de suscripción cancelada -->
+                <div class="appointment-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h4>Spotify - ID: S002</h4>
+                            <p><strong>Categoría:</strong> Música</p>
+                            <p>📅 Último pago: 15 de Junio, 2025 - 💵 $9.99</p>
+                            <small>Método de pago: PayPal (correo@ejemplo.com)</small>
+                        </div>
+                        <div style="text-align: right;">
+                            <span class="status-badge status-cancelled">Cancelada</span><br>
+                            <button class="btn btn-secondary" onclick="openEditModal('S002')">Editar</button>
+                            <button class="btn btn-disabled" disabled>Cancelada</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- MÓDULO: Notificaciones y alertas -->
+        <div id="notificaciones" class="content-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>🔔 Notificaciones y Alertas</h2>
+                <button class="btn btn-success" onclick="openNotificationSettings()">⚙️ Configurar Preferencias</button>
+            </div>
+
+            <!-- Buscador -->
+            <input type="text" class="search-box" placeholder="🔍 Buscar notificación por servicio, tipo o fecha...">
+
+            <div class="form-grid">
+
+                <!-- Sub-funcionalidad 1 -->
+                <div class="form-group">
+                    <label>📅 Alertas de renovación próxima</label>
+                    <p class="small-text">Visualiza y gestiona las alertas activadas sobre próximas fechas de cobro.</p>
+                    <ul class="notification-list">
+                        <li>💡 <strong>Netflix</strong> se renovará el 28 de Julio, 2025.</li>
+                        <li>💡 <strong>Spotify</strong> se renovará el 30 de Julio, 2025.</li>
+                    </ul>
+                </div>
+
+                <!-- Sub-funcionalidad 2 -->
+                <div class="form-group">
+                    <label>⏰ Suscripciones inactivas o sin uso</label>
+                    <p class="small-text">Te alertamos si un servicio no se ha usado recientemente o está en desuso.</p>
+                    <ul class="notification-list">
+                        <li>🛑 <strong>HBO Max</strong> no ha sido abierto en los últimos 45 días.</li>
+                    </ul>
+                </div>
+
+                <!-- Sub-funcionalidad 3 -->
+                <div class="form-group">
+                    <label>✨ Nuevas recomendaciones de servicios</label>
+                    <p class="small-text">Basado en tus preferencias, consumo y perfil de usuario.</p>
+                    <ul class="notification-list">
+                        <li>🆕 <strong>Disney+</strong> disponible con prueba gratuita por 1 mes.</li>
+                        <li>🆕 <strong>Canva Pro</strong> recomendado para usuarios con gastos en herramientas de
+                            diseño.</li>
+                    </ul>
+                </div>
+
+                <!-- Sub-funcionalidad 4 -->
+                <div class="form-group">
+                    <label>📬 Frecuencia de notificaciones</label>
+                    <p class="small-text">Personaliza cada cuánto deseas recibir alertas:</p>
+                    <select onchange="actualizarFrecuencia(this.value)">
+                        <option value="diario">Diariamente</option>
+                        <option value="semanal">Semanalmente</option>
+                        <option value="quincenal">Cada 15 días</option>
+                        <option value="mensual">Mensualmente</option>
+                    </select>
+                    <p id="frecuencia-msg" style="margin-top: 10px; color: green;">Frecuencia actual: semanal</p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- MÓDULO: Visualización y análisis de gastos -->
+        <div id="visualizacion-gastos" class="content-section">
+            <h2>📊 Análisis de Gastos en Suscripciones</h2>
+            <p>Consulta tus gastos, analiza tu consumo y toma mejores decisiones financieras.</p>
+
+            <!-- Sub-funcionalidad 1: Reportes mensuales -->
+            <div class="patient-card" style="margin-top: 20px;">
+                <h3>🗓️ Reporte mensual automático de suscripciones</h3>
+                <p>Resumen automático de tus pagos durante el mes.</p>
+                <ul>
+                    <li><strong>Junio 2025:</strong> $52.98 en 4 servicios</li>
+                    <li><strong>Julio 2025:</strong> $59.45 en 5 servicios</li>
+                </ul>
+                <button class="btn" onclick="openModal('downloadReportModal')">📤 Descargar reporte detallado</button>
+            </div>
+
+            <!-- Sub-funcionalidad 2: Gráfico de servicios más costosos -->
+            <div class="patient-card" style="margin-top: 30px;">
+                <h3>📈 Servicios más costosos</h3>
+                <p>Visualiza en qué servicios estás invirtiendo más.</p>
+                <canvas id="gastosChart" height="200"></canvas>
+            </div>
+
+            <!-- Sub-funcionalidad 3: Recomendaciones para reducir costos -->
+            <div class="patient-card" style="margin-top: 30px;">
+                <h3>💡 Recomendaciones de ahorro</h3>
+                <ul>
+                    <li>🎯 <strong>HBO Max</strong> no se ha usado en los últimos 30 días. Considera cancelarlo.</li>
+                    <li>🎯 <strong>Dropbox</strong> está duplicando funciones con Google Drive.</li>
+                    <li>🎯 Puedes ahorrar $12/mes eliminando servicios no esenciales.</li>
+                </ul>
+            </div>
+
+            <!-- Sub-funcionalidad 4: Comparación con otros usuarios -->
+            <div class="patient-card" style="margin-top: 30px;">
+                <h3>📊 Comparación con otros usuarios</h3>
+                <p>Tu gasto promedio mensual es de <strong>$59.45</strong></p>
+                <p>El promedio general de usuarios similares es de <strong>$46.20</strong></p>
+                <p style="color: #dc3545;">⚠️ Estás por encima del promedio. Considera optimizar tus suscripciones.</p>
+            </div>
+        </div>
+        <!-- MÓDULO: Gestión de Pagos -->
+        <div id="gestion-pagos" class="content-section">
+            <h2>💳 Gestión de Métodos de Pago y Transacciones</h2>
+            <p>Administra tus formas de pago, verifica tus pagos automáticos y revisa el historial por servicio.</p>
+
+            <!-- Sub-funcionalidad 1: Agregar y editar métodos de pago -->
+            <div class="patient-card" style="margin-top: 20px;">
+                <h3>💼 Métodos de pago registrados</h3>
+                <ul>
+                    <li>💳 Visa - **** 1234 <button class="btn btn-secondary btn-sm"
+                            onclick="editarPago('Visa')">Editar</button></li>
+                    <li>💳 PayPal - usuario@correo.com <button class="btn btn-secondary btn-sm"
+                            onclick="editarPago('PayPal')">Editar</button></li>
+                </ul>
+                <button class="btn btn-success" style="margin-top: 10px;" onclick="abrirFormularioPago()">➕ Agregar
+                    nuevo método</button>
+            </div>
+
+            <!-- Sub-funcionalidad 2: Historial de pagos por suscripción -->
+            <div class="patient-card" style="margin-top: 30px;">
+                <h3>📜 Historial de pagos por suscripción</h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #f4f4f4;">
+                            <th style="padding: 10px; border-bottom: 1px solid #ccc;">Servicio</th>
+                            <th style="padding: 10px; border-bottom: 1px solid #ccc;">Fecha</th>
+                            <th style="padding: 10px; border-bottom: 1px solid #ccc;">Monto</th>
+                            <th style="padding: 10px; border-bottom: 1px solid #ccc;">Método</th>
+                            <th style="padding: 10px; border-bottom: 1px solid #ccc;">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 10px;">Netflix</td>
+                            <td style="padding: 10px;">28/06/2025</td>
+                            <td style="padding: 10px;">$15.99</td>
+                            <td style="padding: 10px;">Visa</td>
+                            <td style="padding: 10px;"><span class="status-badge status-confirmed">Pagado</span></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;">Canva Pro</td>
+                            <td style="padding: 10px;">20/06/2025</td>
+                            <td style="padding: 10px;">$12.00</td>
+                            <td style="padding: 10px;">PayPal</td>
+                            <td style="padding: 10px;"><span class="status-badge status-confirmed">Pagado</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Sub-funcionalidad 3 y 4: Pagos automáticos e integración -->
+            <div class="patient-card" style="margin-top: 30px;">
+                <h3>🔁 Pagos automáticos e integración</h3>
+                <p>Los pagos se procesan automáticamente desde el método seleccionado. Actualmente tienes activada la
+                    integración con:</p>
+                <ul>
+                    <li>✅ <strong>VISA</strong> para pagos con tarjeta de crédito.</li>
+                    <li>✅ <strong>PayPal</strong> para pagos directos.</li>
+                </ul>
+                <p>Para cambiar de integración o desactivar pagos automáticos, ajusta las preferencias en tu
+                    configuración de cuenta.</p>
+            </div>
+        </div>
+
+        <!-- Modal: Nueva Suscripción -->
+        <div id="subscriptionModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('subscriptionModal')">&times;</span>
+                <h2>Nueva Suscripción</h2>
+                <form id="addSubscriptionForm">
+                    <div class="form-group">
+                        <label>Servicio</label>
+                        <input type="text" required placeholder="Ej: Netflix">
+                    </div>
+                    <div class="form-group">
+                        <label>Categoría</label>
+                        <select required>
+                            <option>Entretenimiento</option>
+                            <option>Música</option>
+                            <option>Educación</option>
+                            <option>Almacenamiento</option>
+                            <option>Software</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha de renovación</label>
+                        <input type="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Monto</label>
+                        <input type="number" step="0.01" required placeholder="$">
+                    </div>
+                    <div class="form-group">
+                        <label>Método de pago</label>
+                        <input type="text" required placeholder="Ej: Visa (****1234)">
+                    </div>
+                    <button class="btn btn-success" type="submit">Registrar Suscripción</button>
+                </form>
+            </div>
+        </div>
+        <!-- Modal: Editar Suscripción -->
+        <div id="editSubscriptionModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('editSubscriptionModal')">&times;</span>
+                <h2>Editar Suscripción</h2>
+                <form id="editSubscriptionForm">
+                    <div class="form-group">
+                        <label>Servicio</label>
+                        <input type="text" id="editServicio" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Categoría</label>
+                        <select id="editCategoria" required>
+                            <option>Entretenimiento</option>
+                            <option>Música</option>
+                            <option>Educación</option>
+                            <option>Almacenamiento</option>
+                            <option>Software</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha de renovación</label>
+                        <input type="date" id="editFecha" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Monto</label>
+                        <input type="number" step="0.01" id="editMonto" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Método de pago</label>
+                        <input type="text" id="editMetodo" required>
+                    </div>
+                    <div class="form-group" id="editEstadoGroup" style="display:none;">
+                        <label>Estado</label>
+                        <select id="editEstado">
+                            <option value="Activa">Activa</option>
+                            <option value="Cancelada">Cancelada</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-success" type="submit">Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+        <!-- Modal: Agregar/Editar Método de Pago -->
+        <div id="pagoModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('pagoModal')">&times;</span>
+                <h2 id="pagoModalTitle">Método de Pago</h2>
+                <form id="pagoForm">
+                    <div class="form-group">
+                        <label>Tipo</label>
+                        <select id="pagoTipo" required>
+                            <option>Visa</option>
+                            <option>Mastercard</option>
+                            <option>PayPal</option>
+                            <option>Otro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Detalles</label>
+                        <input type="text" id="pagoDetalles" required placeholder="Ej: **** 1234 o correo@ejemplo.com">
+                    </div>
+                    <button class="btn btn-success" type="submit">Guardar</button>
+                </form>
+            </div>
+        </div>
+        <!-- Modal: Configurar Preferencias de Notificaciones -->
+        <div id="notificationSettingsModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('notificationSettingsModal')">&times;</span>
+                <h2>Configurar Preferencias de Notificaciones</h2>
+                <form id="notificationSettingsForm">
+                    <div class="form-group">
+                        <label>Canal de notificación</label>
+                        <select>
+                            <option>Email</option>
+                            <option>SMS</option>
+                            <option>Push móvil</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Servicios a notificar</label>
+                        <input type="text" placeholder="Ej: Netflix, Spotify, HBO Max">
+                    </div>
+                    <div class="form-group">
+                        <label>Frecuencia</label>
+                        <select>
+                            <option>Diario</option>
+                            <option>Semanal</option>
+                            <option>Mensual</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-success" type="submit">Guardar Preferencias</button>
+                </form>
+            </div>
+        </div>
+        <!-- Modal: Descargar Reporte Detallado -->
+        <div id="downloadReportModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('downloadReportModal')">&times;</span>
+                <h2>Descargar Reporte Detallado</h2>
+                <p>Tu reporte detallado está listo para descargar.</p>
+                <div style="display: flex; gap: 10px;">
+                    <a href="#" class="btn btn-success btn-sm" onclick="alert('Simulación de descarga PDF.');">Descargar PDF</a>
+                    <a href="#" class="btn btn-success btn-sm" onclick="alert('Simulación de descarga Excel.');">Descargar Excel</a>
+                </div>
+            </div>
+        </div>
+        <!-- Modal: Logout -->
+        <div id="logoutModal" class="modal">
+            <div class="modal-content" style="text-align:center;">
+                <span class="close" onclick="closeModal('logoutModal')">&times;</span>
+                <h2>Sesión cerrada</h2>
+                <p>¡Hasta pronto! Has cerrado sesión correctamente.</p>
+                <button class="btn btn-success btn-sm" onclick="loginFromLogout()">Volver a iniciar sesión</button>
+            </div>
+        </div>
+        <!-- Modal: Registro de Usuario -->
+        <div id="registerModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('registerModal')">&times;</span>
+                <h2>Registro de Usuario</h2>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="text" required placeholder="Tu nombre">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" required placeholder="correo@ejemplo.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Contraseña</label>
+                        <input type="password" required placeholder="Contraseña">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirmar contraseña</label>
+                        <input type="password" required placeholder="Repite la contraseña">
+                    </div>
+                    <button class="btn btn-success" type="submit">Registrarse</button>
+                </form>
+            </div>
+        </div>
+        <!-- Modal: Login de Usuario -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('loginModal')">&times;</span>
+                <h2>Iniciar Sesión</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" required placeholder="correo@ejemplo.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Contraseña</label>
+                        <input type="password" required placeholder="Contraseña">
+                    </div>
+                    <button class="btn btn-success" type="submit">Iniciar sesión</button>
+                </form>
+            </div>
+        </div>
+        <script>
+            function showSection(sectionId, clickedTab) {
+                // Oculta todas las secciones
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+
+                // Muestra la seleccionada
+                document.getElementById(sectionId).classList.add('active');
+
+                // Quita 'active' de todas las pestañas
+                document.querySelectorAll('.nav-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+
+                // Agrega 'active' a la pestaña clicada
+                clickedTab.classList.add('active');
+
+                // Mostrar/ocultar botón de logout según la sección
+                const logoutBtn = document.getElementById('logoutBtn');
+                if (logoutBtn) {
+                    if (sectionId === 'dashboard') {
+                        logoutBtn.style.display = 'none';
+                    } else {
+                        logoutBtn.style.display = '';
+                    }
+                }
+            }
+
+            // ✅ Frecuencia de notificaciones
+            function actualizarFrecuencia(valor) {
+                document.getElementById("frecuencia-msg").innerText = `Frecuencia actual: ${valor}`;
+                alert(`Preferencia actualizada a: ${valor}`);
+                // Aquí puedes guardar en backend si deseas
+            }
+
+            function openNotificationSettings() {
+                openModal('notificationSettingsModal');
+            }
+
+            // ✅ Gestión de métodos de pago
+            function editarPago(metodo) {
+                document.getElementById('pagoModalTitle').innerText = 'Editar Método de Pago';
+                document.getElementById('pagoTipo').value = metodo;
+                document.getElementById('pagoDetalles').value = '';
+                openModal('pagoModal');
+            }
+
+            function abrirFormularioPago() {
+                document.getElementById('pagoModalTitle').innerText = 'Agregar Nuevo Método de Pago';
+                document.getElementById('pagoTipo').value = 'Visa';
+                document.getElementById('pagoDetalles').value = '';
+                openModal('pagoModal');
+            }
+
+            // ✅ Gestión de suscripciones
+            function cancelSubscription(id) {
+                if (confirm(`¿Deseas cancelar la suscripción con ID: ${id}?`)) {
+                    alert("Suscripción cancelada.");
+                }
+            }
+
+            function openEditModal(id) {
+                // Simulación: precargar datos de ejemplo
+                if (id === 'S001') {
+                    document.getElementById('editServicio').value = 'Netflix';
+                    document.getElementById('editCategoria').value = 'Entretenimiento';
+                    document.getElementById('editFecha').value = '2025-07-28';
+                    document.getElementById('editMonto').value = '15.99';
+                    document.getElementById('editMetodo').value = 'Visa (****1234)';
+                    document.getElementById('editEstadoGroup').style.display = 'none';
+                } else if (id === 'S002') {
+                    document.getElementById('editServicio').value = 'Spotify';
+                    document.getElementById('editCategoria').value = 'Música';
+                    document.getElementById('editFecha').value = '2025-06-15';
+                    document.getElementById('editMonto').value = '9.99';
+                    document.getElementById('editMetodo').value = 'PayPal (correo@ejemplo.com)';
+                    document.getElementById('editEstadoGroup').style.display = 'block';
+                    document.getElementById('editEstado').value = 'Cancelada';
+                }
+                openModal('editSubscriptionModal');
+            }
+
+            // ✅ Formulario de nueva suscripción
+            document.addEventListener("DOMContentLoaded", () => {
+                const form = document.getElementById("addSubscriptionForm");
+                if (form) {
+                    form.addEventListener("submit", function (e) {
+                        e.preventDefault();
+                        alert("✅ Suscripción registrada correctamente.");
+                        closeModal("subscriptionModal");
+                    });
+                }
+                const editForm = document.getElementById("editSubscriptionForm");
+                if (editForm) {
+                    editForm.addEventListener("submit", function (e) {
+                        e.preventDefault();
+                        const estadoGroup = document.getElementById('editEstadoGroup');
+                        let msg = "✅ Cambios guardados correctamente.";
+                        if (estadoGroup && estadoGroup.style.display !== 'none') {
+                            const estado = document.getElementById('editEstado').value;
+                            if (estado === 'Activa') {
+                                msg = "✅ Suscripción reactivada y cambios guardados.";
+                            } else {
+                                msg = "✅ Cambios guardados. La suscripción sigue cancelada.";
+                            }
+                        }
+                        alert(msg);
+                        closeModal("editSubscriptionModal");
+                    });
+                }
+                const pagoForm = document.getElementById("pagoForm");
+                if (pagoForm) {
+                    pagoForm.addEventListener("submit", function (e) {
+                        e.preventDefault();
+                        alert("✅ Método de pago guardado correctamente.");
+                        closeModal("pagoModal");
+                    });
+                }
+                const notificationSettingsForm = document.getElementById("notificationSettingsForm");
+                if (notificationSettingsForm) {
+                    notificationSettingsForm.addEventListener("submit", function (e) {
+                        e.preventDefault();
+                        alert("✅ Preferencias de notificación guardadas.");
+                        closeModal("notificationSettingsModal");
+                    });
+                }
+                // Mostrar/ocultar botón de logout según la sección activa al cargar
+                const logoutBtn = document.getElementById('logoutBtn');
+                const dashboardSection = document.getElementById('dashboard');
+                if (logoutBtn && dashboardSection) {
+                    if (dashboardSection.classList.contains('active')) {
+                        logoutBtn.style.display = 'none';
+                    } else {
+                        logoutBtn.style.display = '';
+                    }
+                }
+                const registerForm = document.getElementById("registerForm");
+                if (registerForm) {
+                    registerForm.addEventListener("submit", function (e) {
+                        e.preventDefault();
+                        alert("✅ Registro exitoso. ¡Bienvenido a MySubs!");
+                        closeModal("registerModal");
+                        setTimeout(function() {
+                            openModal('loginModal');
+                        }, 300);
+                    });
+                }
+                const loginForm = document.getElementById("loginForm");
+                if (loginForm) {
+                    loginForm.addEventListener("submit", function (e) {
+                        e.preventDefault();
+                        alert("👋 Bienvenido, has iniciado sesión.");
+                        closeModal("loginModal");
+                        setTimeout(function() {
+                            // Remove 'active' from all sections and tabs
+                            document.querySelectorAll('.content-section').forEach(section => {
+                                section.classList.remove('active');
+                            });
+                            document.querySelectorAll('.nav-tab').forEach(tab => {
+                                tab.classList.remove('active');
+                            });
+                            // Activate 'gestion-suscripciones' section and tab
+                            var subsSection = document.getElementById('gestion-suscripciones');
+                            if (subsSection) subsSection.classList.add('active');
+                            var tabs = document.querySelectorAll('.nav-tab');
+                            for (var i = 0; i < tabs.length; i++) {
+                                if (tabs[i].textContent.includes('Gestión de suscripciones')) {
+                                    tabs[i].classList.add('active');
+                                    // Also call showSection for any additional logic
+                                    showSection('gestion-suscripciones', tabs[i]);
+                                    break;
+                                }
+                            }
+                            // Show logout button
+                            var logoutBtn = document.getElementById('logoutBtn');
+                            if (logoutBtn) logoutBtn.style.display = '';
+                        }, 300);
+                    });
+                }
+            });
+
+            // ✅ Modal genérico
+            function openModal(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) modal.style.display = 'block';
+            }
+
+            function closeModal(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) modal.style.display = 'none';
+            }
+
+            // ✅ Simulación de escenarios comerciales (ya implementado)
+            let simulationChartInstance = null;
+            function simularEscenario() {
+                const scenarioText = document.getElementById('userScenario').value.toLowerCase();
+                const chartCanvas = document.getElementById('simulationChart');
+                const scenarioResponse = document.getElementById('scenarioResponse');
+
+                if (simulationChartInstance) simulationChartInstance.destroy();
+
+                if (scenarioText.includes('promoción camisetas dragon 2x1')) {
+                    chartCanvas.style.display = 'block';
+                    const ctx = chartCanvas.getContext('2d');
+                    const data = {
+                        labels: ['Ingresos Totales', 'Ganancia Neta'],
+                        datasets: [{
+                            label: 'Escenario Actual',
+                            data: [1200, 800],
+                            backgroundColor: 'rgba(75, 156, 162, 0.6)',
+                            borderColor: 'rgba(75, 156, 162, 1)',
+                            borderWidth: 1
+                        }, {
+                            label: 'Con Promoción 2x1',
+                            data: [1800, 600],
+                            backgroundColor: 'rgba(245, 87, 108, 0.6)',
+                            borderColor: 'rgba(245, 87, 108, 1)',
+                            borderWidth: 1
+                        }]
+                    };
+
+                    simulationChartInstance = new Chart(ctx, {
+                        type: 'bar',
+                        data: data,
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Simulación: Promoción Camisetas Dragón 2x1'
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function (context) {
+                                            let label = context.dataset.label || '';
+                                            if (label) label += ': ';
+                                            if (context.parsed.y !== null) {
+                                                label += new Intl.NumberFormat('es-EC', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
+                                            }
+                                            return label;
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: function (value) {
+                                            return '$' + value;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    const p = scenarioResponse.querySelector('p');
+                    if (p) p.remove();
+
+                } else {
+                    chartCanvas.style.display = 'none';
+                    const p = scenarioResponse.querySelector('p');
+                    if (p) p.remove();
+                    const message = document.createElement('p');
+                    message.textContent = 'Análisis no disponible. Introduce el escenario "Promoción camisetas dragon 2x1" para ver la simulación.';
+                    scenarioResponse.appendChild(message);
+                }
+            }
+
+            // ✅ Otros botones y simulaciones
+            function openAIChat() {
+                alert('Función de Chat con IA no implementada todavía.');
+            }
+
+            function buscarCompetencia() {
+                const container = document.getElementById('competencia-resultado');
+                container.style.display = 'block';
+                container.innerHTML = `
+                <h4>🔍 Análisis de Competencia Local (Ejemplo)</h4>
+                <div class="result-item">
+                  <strong>Nombre:</strong> "Urbano Style EC"<br>
+                  <strong>Ubicación:</strong> Guayaquil<br>
+                  <strong>Precios:</strong> $15 - $35<br>
+                  <strong>Estrategia Clave:</strong> Instagram + influencers locales.
+                </div>
+                <div class="result-item">
+                  <strong>Nombre:</strong> "Quito Prints"<br>
+                  <strong>Ubicación:</strong> Quito<br>
+                  <strong>Precios:</strong> $20 - $40<br>
+                  <strong>Estrategia Clave:</strong> Diseños personalizados + envío gratis.
+                </div>
+              `;
+            }
+
+            function verTendencias() {
+                const container = document.getElementById('tendencias-resultado');
+                container.style.display = 'block';
+                container.innerHTML = `
+                <h4>📊 Tendencias del Mercado (Ejemplo)</h4>
+                <div class="result-item">
+                  <strong>Tendencia:</strong> Ropa con estampados minimalistas.<br>
+                  <strong>Crecimiento Estimado:</strong> +15% en los próximos 3 meses.<br>
+                  <strong>Fechas Clave:</strong> Ideal para el Día de la Amistad.
+                </div>
+                <div class="result-item">
+                  <strong>Tendencia:</strong> Prendas de algodón orgánico.<br>
+                  <strong>Crecimiento Estimado:</strong> +25%.<br>
+                  <strong>Fechas Clave:</strong> Día de la Tierra, ferias sostenibles.
+                </div>
+              `;
+            }
+
+            function generarPerfilCliente() {
+                const container = document.getElementById('perfil-resultado');
+                container.style.display = 'block';
+                container.innerHTML = `
+                <h4>🎯 Perfil del Cliente Ideal (Ejemplo)</h4>
+                <div class="result-item">
+                  <strong>Demografía:</strong> 18-30 años, zonas urbanas.<br>
+                  <strong>Intereses:</strong> Cultura pop, videojuegos, arte digital.<br>
+                  <strong>Online:</strong> Activos en Instagram y TikTok.<br>
+                  <strong>Canal:</strong> Publicidad segmentada en Instagram Reels.
+                </div>
+              `;
+            }
+
+            function consultarIA() {
+                alert('Consulta a IA no implementada todavía.');
+            }
+
+            function subirDocumento() {
+                alert('Función de subida de documento no implementada todavía.');
+            }
+
+            let gastosChartInstance = null;
+            function renderGastosChart() {
+                const canvas = document.getElementById('gastosChart');
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                if (gastosChartInstance) {
+                    gastosChartInstance.destroy();
+                }
+                gastosChartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Netflix', 'Spotify', 'HBO Max', 'Dropbox', 'Canva Pro'],
+                        datasets: [{
+                            label: 'Gasto mensual (USD)',
+                            data: [15.99, 9.99, 12.99, 11.00, 12.00],
+                            backgroundColor: [
+                                'rgba(75, 156, 162, 0.7)',
+                                'rgba(245, 87, 108, 0.7)',
+                                'rgba(102, 230, 234, 0.7)',
+                                'rgba(102, 126, 234, 0.7)',
+                                'rgba(255, 206, 86, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgba(75, 156, 162, 1)',
+                                'rgba(245, 87, 108, 1)',
+                                'rgba(102, 230, 234, 1)',
+                                'rgba(102, 126, 234, 1)',
+                                'rgba(255, 206, 86, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { display: false },
+                            title: {
+                                display: true,
+                                text: 'Servicios más costosos'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        return context.dataset.label + ': $' + context.parsed.y;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'USD' }
+                            }
+                        }
+                    }
+                });
+            }
+            // Render chart on DOMContentLoaded if section is visible
+            document.addEventListener('DOMContentLoaded', function() {
+                if (document.getElementById('visualizacion-gastos').classList.contains('active')) {
+                    renderGastosChart();
+                }
+            });
+            // Render chart when switching to the gastos section (tab click)
+            const navTabs = document.querySelectorAll('.nav-tab');
+            navTabs.forEach(tab => {
+                tab.addEventListener('click', function () {
+                    if (this.textContent.includes('Análisis y visualización de gastos')) {
+                        setTimeout(renderGastosChart, 300); // Wait for section to show
+                    }
+                });
+            });
+            // Fallback: Observe section for class changes (in case of programmatic activation)
+            const gastosSection = document.getElementById('visualizacion-gastos');
+            if (window.MutationObserver && gastosSection) {
+                const observer = new MutationObserver(function(mutationsList) {
+                    for (const mutation of mutationsList) {
+                        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                            if (gastosSection.classList.contains('active')) {
+                                renderGastosChart();
+                            }
+                        }
+                    }
+                });
+                observer.observe(gastosSection, { attributes: true });
+            }
+
+            function loginFromLogout() {
+                closeModal('logoutModal');
+                setTimeout(function() {
+                    // Remove 'active' from all sections and tabs
+                    document.querySelectorAll('.content-section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    document.querySelectorAll('.nav-tab').forEach(tab => {
+                        tab.classList.remove('active');
+                    });
+                    // Activate dashboard section
+                    var dashboard = document.getElementById('dashboard');
+                    if (dashboard) dashboard.classList.add('active');
+                    // Hide logout button
+                    var logoutBtn = document.getElementById('logoutBtn');
+                    if (logoutBtn) logoutBtn.style.display = 'none';
+                }, 300);
+            }
+        </script>
+
+
+</body>
